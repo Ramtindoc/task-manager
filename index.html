@@ -4,7 +4,25 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>task manager</title>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <!-- added persian font -->
+    <!-- <link    
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap"
+      rel="stylesheet"
+    /> -->
   </head>
-  <body></body>
+  <body>
+    <div class="container">
+      <h1>task-manager</h1>
+      <div class="input-container">
+        <input type="text" id="taskInput" placeholder="Add new task..." />
+        <button onclick="addTask()">Add</button>
+      </div>
+      <ul id="taskList">
+        <li>#1</li>
+        <li>#2</li>
+      </ul>
+    </div>
+  </body>
   <script src="app.js"></script>
 </html>

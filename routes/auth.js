@@ -2,7 +2,6 @@ const express = require("express");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { registerUser, findUser } = require("../models/User");
-const { createTask, getTasksByUserId } = require("../models/task");
 const router = express.Router();
 require("dotenv").config();
 

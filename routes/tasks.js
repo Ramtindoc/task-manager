@@ -1,11 +1,10 @@
-// tasks.js
 const express = require("express");
 const { createTask, getTasksByUserId } = require("../models/task");
 const router = express.Router();
-const auth = require("./auth.js");
+const { authenticateToken } = require("./auth.js"); // Ensure this is importing the correct middleware
 
-// create a new task
-router.post("/create", auth, async (req, res) => {
+// Create a new task(NOT FIX)
+router.post("/create", authenticateToken, async (req, res) => {
   const { title, completed } = req.body;
   try {
     const newTask = await createTask(title, completed, req.user.id);
@@ -16,8 +15,8 @@ router.post("/create", auth, async (req, res) => {
   }
 });
 
-// گرفتن همه تسک‌ها
-router.get("/gettask", auth, async (req, res) => {
+// Get tasks by user ID (NOT FIX)
+router.get("/gettask", authenticateToken, async (req, res) => {
   try {
     const tasks = await getTasksByUserId(req.user.id);
     res.json(tasks);
@@ -26,6 +25,6 @@ router.get("/gettask", auth, async (req, res) => {
   }
 });
 
-// سایر مسیرها (گرفتن یک تسک، به‌روزرسانی، حذف) را نیز می‌توانید به همین صورت پیاده‌سازی کنید.
+// Additional routes (e.g., fetching a task, updating, deleting) can be implemented similarly.
 
 module.exports = router;

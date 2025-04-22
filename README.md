@@ -1,2 +1,13 @@
-# task-manager
-## create by Ramtin for 'nadin soft'(NOT FINISHED)
+# sign up
+
+## create a http request with POSTMAN
+
+## in URL writen 'http://localhost:3000/register'
+
+# login
+
+## keep like sign up
+
+## in URL writen 'http://localhost:3000/login'
+
+# I tried to fix 'argument handler must be a function' but fix without Standard Module Structure

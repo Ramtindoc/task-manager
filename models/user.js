@@ -2,7 +2,6 @@ const conDb = require("../config/db");
 
 const connection = conDb.pool;
 
-// متد برای ثبت‌ نام کاربر
 const registerUser = (username, password) => {
   const sql = "INSERT INTO users (username, password) VALUES (?, ?)";
   connection.query(sql, [username, password], (err, results) => {

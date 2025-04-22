@@ -2,40 +2,44 @@ const express = require("express");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { registerUser, findUser } = require("../models/User");
-// const User = require("../models/User");
+const { createTask, getTasksByUserId } = require("../models/task");
 const router = express.Router();
 require("dotenv").config();
 
-// Middleware to authenticate JWT
+let tokenHeaderKey = process.env.TOKEN_HEADER_KEY;
+let jwtSecretKey = process.env.JWT_SECRET_KEY;
+
+// Authentication middleware
 const authenticateToken = (req, res, next) => {
-  const token = req.headers["authorization"]?.split(" ")[1]; // Get token from Authorization header
+  const token = req.headers[tokenHeaderKey]?.split(" ")[1]; // Get token from Authorization header
 
   if (!token) {
-    return res.status(403).json({ error: "No token provided" });
+    res.status(403).json({ error: "No token provided" }); // Only send this response once
+    console.log(req.headers);
   }
 
-  jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+  jwt.verify(token, jwtSecretKey, (err, user) => {
     if (err) {
-      return res.status(401).json({ error: "Unauthorized" });
+      return res.status(401).json({ error: "Unauthorized" }); // Only send this response once
     }
     req.user = user; // Attach user info to request object
     next(); // Proceed to the next middleware/route handler
   });
 };
 
-// Register
+// Register from user to sign up
 router.post("/register", async (req, res) => {
   const { username, password } = req.body;
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
-    const userId = await registerUser(username, hashedPassword); // Use the createUser function
+    const userId = await registerUser(username, hashedPassword);
     res.status(201).json({ message: "User registered successfully", userId });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
 
-// login
+// Login
 router.post("/login", async (req, res) => {
   const { username, password } = req.body;
   try {
@@ -46,15 +50,19 @@ router.post("/login", async (req, res) => {
     if (!isMatch)
       return res.status(400).json({ message: "Invalid credentials" });
 
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+    // const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+    //   expiresIn: "1h",
+    // });
+
+    const token = jwt.sign({ id: user.id }, jwtSecretKey, {
       expiresIn: "1h",
     });
-    res.json({ token });
+    return res.json({ token }); // send a token to login with JWT
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
 module.exports = {
-  auth: authenticateToken,
+  authenticateToken,
   router,
 };
